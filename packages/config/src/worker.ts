@@ -8,11 +8,12 @@ export const workerConfig: WorkerConfig = {
       method: 'GET',
       target: 'https://st.mioc.cc/health',
       // This host is in the same Cloudflare zone as the status page, so the
-      // Worker's fetch always goes through Cloudflare's edge, whose TLS to
-      // this origin fails with 525 even while the origin is up. 525 means the
-      // origin accepted the TCP connection, so treat it as healthy alongside
-      // the 200 everyone else gets (which is why there is no responseKeyword).
-      expectedCodes: [200, 525],
+      // Worker's fetch always goes through Cloudflare's edge, which cannot
+      // proxy this origin cleanly and answers with its own 52x codes (seen:
+      // 520, 525) even while the origin is up. A healthy origin can still
+      // produce those, so accept them next to the 200 everyone else gets.
+      // Real outages show up as 521/522/523, which stay down. No responseKeyword.
+      expectedCodes: [200, 520, 525],
       timeout: 10000,
       link: 'https://st.mioc.cc/health',
     },
