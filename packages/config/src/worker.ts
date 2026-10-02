@@ -4,11 +4,12 @@ export const workerConfig: WorkerConfig = {
   monitors: [
     {
       id: 'st_mioc',
+      // HTTP check would fail: the Worker and this host share the mioc.cc
+      // Cloudflare zone, so fetch() is handled by Cloudflare's edge (525).
+      // A raw TCP check goes straight to the origin.
       name: 'st.mioc.cc',
-      method: 'GET',
-      target: 'https://st.mioc.cc/',
-      // Caddy answers every path with 404, so any HTTP reply means the host is up.
-      expectedCodes: [200, 404],
+      method: 'TCP_PING',
+      target: 'st.mioc.cc:443',
       timeout: 10000,
       link: false,
     },
