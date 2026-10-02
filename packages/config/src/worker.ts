@@ -4,13 +4,15 @@ export const workerConfig: WorkerConfig = {
   monitors: [
     {
       id: 'st_mioc',
+      // st.mioc.cc serves /health (200) publicly. FlareWatch's Worker cannot
+      // HTTP-check it: the host is in the same Cloudflare zone as the status
+      // page, so the Worker's fetch() is handled by Cloudflare's edge and the
+      // edge's TLS to this origin fails (525). Raw TCP goes straight through.
       name: 'st.mioc.cc',
-      method: 'GET',
-      target: 'https://st.mioc.cc/health',
-      expectedCodes: [200],
-      responseKeyword: 'OK',
+      method: 'TCP_PING',
+      target: 'st.mioc.cc:443',
       timeout: 10000,
-      link: false,
+      link: 'https://st.mioc.cc/health',
     },
     {
       id: 'mc_mioc',
