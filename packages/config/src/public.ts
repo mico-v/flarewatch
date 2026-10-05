@@ -7,6 +7,6 @@ export const pageConfig: PageConfig = {
     { label: 'Cloudflare', link: 'https://www.cloudflare.com/' },
   ],
   group: {
-    Services: ['st_mioc', 'mc_mioc'],
+    Services: ['st_mioc', 'mc_mioc', 'tokyo_mioc'],
   },
 };
