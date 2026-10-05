@@ -29,13 +29,9 @@ export const workerConfig: WorkerConfig = {
       id: 'tokyo_mioc',
       name: 'tokyo.mioc.cc',
       method: 'GET',
-      // The origin's TLS cert only covers cloud.micoz.space, so Cloudflare's
-      // edge (which handles this same-zone fetch) answers 526 while the
-      // server is up. 200 once the origin cert covers tokyo.mioc.cc.
       target: 'https://tokyo.mioc.cc/',
-      expectedCodes: [200, 526],
+      expectedCodes: [200],
       timeout: 10000,
-      link: false,
     },
   ],
 };
