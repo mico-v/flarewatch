@@ -6,14 +6,14 @@ export const workerConfig: WorkerConfig = {
       id: 'st_mioc',
       name: 'st.mioc.cc',
       method: 'GET',
-      target: 'https://st.mioc.cc/health',
-      // This host is in the same Cloudflare zone as the status page, so the
-      // Worker's fetch always goes through Cloudflare's edge, which cannot
-      // proxy this origin cleanly and answers with its own 52x codes (seen:
-      // 520, 525) even while the origin is up. A healthy origin can still
-      // produce those, so accept them next to the 200 everyone else gets.
-      // Real outages show up as 521/522/523, which stay down. No responseKeyword.
-      expectedCodes: [200, 520, 525],
+      // Checked over plain HTTP against the origin IP. The domain lives in the
+      // same Cloudflare zone as the status page, so a Worker fetch to it is
+      // handled by Cloudflare's edge and answers with its own 52x codes, and
+      // aliyun rejects plain HTTP to the unfiled domain. The IP gets a real
+      // 200 from Caddy (see /etc/caddy/Caddyfile.d/health-ip.caddy).
+      target: 'http://47.102.204.134/health',
+      expectedCodes: [200],
+      responseKeyword: 'OK',
       timeout: 10000,
       link: 'https://st.mioc.cc/health',
     },
